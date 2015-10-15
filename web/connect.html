@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js canvas - geometry - cube</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #f0f0f0;
+				margin: 0px;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+
+		<script src="../build/three.min.js"></script>
+
+		<script src="js/renderers/Projector.js"></script>
+		<script src="js/renderers/CanvasRenderer.js"></script>
+
+		<script src="js/libs/stats.min.js"></script>
+		
+		<script src="http://dfdbz2tdq3k01.cloudfront.net/js/2.1.0/ortc.js"></script>
+		
+
+		<script>
+
+window.onload = function () {
+   loadOrtcFactory(IbtRealTimeSJType, function (factory, error) {
+       if (error != null) {
+           alert("Factory error: " + error.message);
+       } else {
+           if (factory != null) {
+               // Create ORTC client
+               var ortcClient = factory.createClient();
+                
+               // Set ORTC client properties
+               ortcClient.setId('master_id');
+               ortcClient.setConnectionMetadata('clientConnMeta');
+               ortcClient.setClusterUrl('http://ortc-developers.realtime.co/server/2.1/');
+                
+               ortcClient.onConnected = function (ortc) {
+                          // Connected
+                    
+                  ortcClient.subscribe('my_channel', true, function (ortc, channel, message) {                        
+                       console.log("Received message: " + message + " at channel " + channel);                       
+                  });                                    
+ /*
+                  ortcClient.subscribe('channel2', true, function (ortc, channel, message) {                        
+                       console.log("Received message: " + message + " at channel " + channel);                       
+                  });
+*/
+               };
+                 
+               ortcClient.onDisconnected = function (ortc) { 
+                          // Disconnected
+               };
+                
+               ortcClient.onSubscribed = function (ortc, channel) { 
+                   // Subscribed to the channel 'channel'
+                      
+                   ortcClient.send(channel, 'Message to the channel');
+               };
+                                            
+                    ortcClient.onException = function (ortc, exception) {
+                        // Exception occurred: 'exception'
+                   };
+                    
+                    ortcClient.onReconnecting = function (ortc) {
+                        // Trying to reconnect
+                   };
+                    
+                    ortcClient.onReconnected = function (ortc) {
+                        // Reconnected
+                   };
+                    
+                    ortcClient.connect('ddQu0z', 'bMNLN9gzom1Z');
+                }
+        }
+    }); 
+};
+
+		</script>
+
+	</body>
+</html>
